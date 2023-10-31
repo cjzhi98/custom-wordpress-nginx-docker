@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+    wordpress:
+        image: your-custom-wordpress
+        restart: unless-stopped
+        volumes:
+            - wordpress:/var/www/html
+        networks:
+            - wordpress
+    nginx:
+        depends_on:
+            - wordpress
+        image: nginx:1.15.12-alpine
+        restart: unless-stopped
+        ports:
+            - "8000:80"
+        volumes:
+            - wordpress:/var/www/html
+            - ./nginx-conf:/etc/nginx/conf.d
+        networks:
+            - wordpress
+volumes:
+    wordpress:
+networks:
+    wordpress:
+        driver: bridge
